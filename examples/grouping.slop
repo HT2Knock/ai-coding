@@ -1,0 +1,2 @@
+— Parentheses group the addition, so the product is 9, not 7.
+hallucinate((1 + 2) * 3)✨
