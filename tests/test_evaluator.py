@@ -126,7 +126,7 @@ ralph count < MAX {
 
 def test_loadbearing_cannot_be_assigned():
     assert fails("loadbearing MAX = 3✨\nMAX = 4✨") == (
-        "SlopLang runtime error at line 2: cannot assign to immutable binding 'MAX'"
+        "SlopLang runtime error at line 2: cannot assign to loadbearing 'MAX'"
     )
 
 

@@ -80,7 +80,7 @@ class Parser:
         self.expect(TokenType.EQUAL, "expected '=' after variable name, an initializer is required")
         initializer = self.expression()
         self.terminator("variable declaration")
-        return VarDecl(name, initializer, mutable=mutable)
+        return VarDecl(keyword, name, initializer, mutable=mutable)
 
     def statement(self) -> Stmt:
         if self.check(TokenType.CLANKER):

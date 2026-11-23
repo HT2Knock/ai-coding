@@ -46,7 +46,7 @@ CASES = [
         "loadbearing MAX = 3✨\nMAX = 4✨",
         "runtime",
         2,
-        "cannot assign to immutable binding 'MAX'",
+        "cannot assign to loadbearing 'MAX'",
     ),
     ("slop x = 1✨\nslop x = 2✨", "runtime", 2, "'x' is already declared in this scope"),
     ("vibe 1 {\n}", "runtime", 1, "vibe condition must be a boolean, got number"),
