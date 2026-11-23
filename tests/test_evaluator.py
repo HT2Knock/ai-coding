@@ -114,6 +114,32 @@ hallucinate(n)✨"""
     assert run(source) == "105\n1\n"
 
 
+def test_loadbearing_declaration_reads_like_slop():
+    source = """loadbearing MAX = 3✨
+slop count = 0✨
+ralph count < MAX {
+    hallucinate(count)✨
+    count = count + 1✨
+}"""
+    assert run(source) == "0\n1\n2\n"
+
+
+def test_loadbearing_cannot_be_assigned():
+    assert fails("loadbearing MAX = 3✨\nMAX = 4✨") == (
+        "SlopLang runtime error at line 2: cannot assign to immutable binding 'MAX'"
+    )
+
+
+def test_loadbearing_binding_may_be_shadowed():
+    source = """loadbearing LIMIT = 10✨
+vibe ✅ {
+    loadbearing LIMIT = 20✨
+    hallucinate(LIMIT)✨
+}
+hallucinate(LIMIT)✨"""
+    assert run(source) == "20\n10\n"
+
+
 def test_ship_unwinds_nested_blocks_and_loops():
     source = """clanker find() {
     slop i = 0✨
