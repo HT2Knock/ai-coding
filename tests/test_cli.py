@@ -34,3 +34,39 @@ def test_missing_file_and_usage():
     missing = run_cli(str(ROOT / "nope.slop"))
     assert missing.returncode == 2
     assert "could not read" in missing.stderr
+
+
+def test_check_accepts_a_valid_file():
+    completed = run_cli("--check", str(ROOT / "examples/hello.slop"))
+    assert completed.returncode == 0
+    assert completed.stdout == ""
+    assert completed.stderr == ""
+
+
+def test_check_reports_syntax_errors(tmp_path: Path):
+    program = tmp_path / "broken.slop"
+    program.write_text("hallucinate(“before”)✨\nhallucinate(✨\n", encoding="utf-8")
+    completed = run_cli("--check", str(program))
+    assert completed.returncode == 1
+    assert completed.stdout == ""
+    assert "syntax error" in completed.stderr
+
+
+def test_check_does_not_run_the_program(tmp_path: Path):
+    program = tmp_path / "side_effect.slop"
+    program.write_text("hallucinate(“ran”)✨\n", encoding="utf-8")
+    completed = run_cli("--check", str(program))
+    assert completed.returncode == 0
+    assert completed.stdout == ""
+
+
+def test_check_ignores_runtime_errors(tmp_path: Path):
+    program = tmp_path / "runtime.slop"
+    program.write_text("hallucinate(missing)✨\n", encoding="utf-8")
+    completed = run_cli("--check", str(program))
+    assert completed.returncode == 0
+    assert completed.stderr == ""
+
+
+def test_check_usage():
+    assert run_cli("--check").returncode == 2
