@@ -70,3 +70,12 @@ def test_check_ignores_runtime_errors(tmp_path: Path):
 
 def test_check_usage():
     assert run_cli("--check").returncode == 2
+
+
+def test_division_by_zero_reports_a_runtime_error_without_a_traceback(tmp_path: Path):
+    program = tmp_path / "divide.slop"
+    program.write_text("hallucinate(1 / 0)✨\n", encoding="utf-8")
+    completed = run_cli(str(program))
+    assert completed.returncode == 1
+    assert completed.stderr == "SlopLang runtime error at line 1: division by zero\n"
+    assert "Traceback" not in completed.stderr
